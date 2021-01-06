@@ -26,12 +26,10 @@ const goodsRule = new Schema({
         required:true 
     },
     info:{  //详情
-        type:String,
-        required:true
+        type:String
     },
     imgs:{
-        type:Array,
-        required:true,
+        type:Array
     },
     create_time: {  //创建时间
         type:Number, 
@@ -47,15 +45,5 @@ const goodsRule = new Schema({
     }
 })
 const goodsModel = mongoose.model('goods',goodsRule)
-goodsModel.findOne({name:'admin'}).then(user=>{
-    if(!user){
-        goodsModel.create({name:'admin',desc:'111',pric:4999,status:1,category:'王者荣耀',info:'admin',imgs:['1609482256493.jpg']}).then(user=>{
-            console.log('初始化商品')
-        })
-    }
-})
-
-
-
 //创建模型对象
 module.exports = goodsModel  //用于生成某个集合所对应的模型对象

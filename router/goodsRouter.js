@@ -43,7 +43,7 @@ router.post('/category/list',jsonParser,key,(request,response)=>{
 /* 添加分类列表 */
 router.post('/category/add',jsonParser,key,(request,response)=>{
     const { name } = request.body
-    ategoryModel.findOne({name}).then(data=>{
+    categoryModel.findOne({name}).then(data=>{
         if(data == null){
             categoryModel.create({name}).then(data=>{
                 if(data){
@@ -130,7 +130,7 @@ router.get('/goods/get_by_id',jsonParser,key,(request,response)=>{
     goodsModel.findOne({_id}).then(data=>{
         response.send({status:0,'data':data,msg:'ok'})
     }).catch(err=>{
-        response.send({status:1,data:err,msg:'err'})
+        response.send({status:1,data:err,msg:'获取商品信息失败'})
     })
 })
 /* 根据id获取商品分类 */
@@ -154,6 +154,18 @@ router.post('/goods/add',jsonParser,key,(request,response)=>{
         }
     }).catch(err=>{
             response.send({'status':1,'msg':'商品添加失败'})
+    })
+})
+/* 修改商品 */
+router.post('/goods/update',jsonParser,key,(request,response)=>{
+    const { _id,name,desc,pric,category,info,imgs } = request.body
+    console.log(request.body)
+    goodsModel.updateOne({_id},{ name,desc,pric:parseFloat(pric),category,info,imgs }).then(data=>{
+        if(data){
+            response.send({'status':0,'data':data})
+        }
+    }).catch(err=>{
+            response.send({'status':1,'msg':'商品修改失败'})
     })
 })
 module.exports = function (){
