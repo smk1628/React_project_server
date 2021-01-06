@@ -25,5 +25,5 @@ db(()=>{
     app.listen(5000,(err)=>{
         if(!err) console.log('server success')
         else console.log(err)
-    })
+    }) 
 })
