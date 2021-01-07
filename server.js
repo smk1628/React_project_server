@@ -3,6 +3,7 @@ const db = require('./db/db')
 const app = express()
 const loginRouter = require('./router/loginRouter')
 const goodsRouter = require('./router/goodsRouter')
+const userRouter = require('./router/userRouter')
 //const imgUploadRouter = require('./router/imgFilesRouter')
 const imgUploadRouter  = require('./router/filesRouter')
 const cors = require('cors')
@@ -21,6 +22,7 @@ db(()=>{
     //使用loginRouter中间件
     app.use(loginRouter())
     app.use(goodsRouter())
+    app.use(userRouter())
     app.use(imgUploadRouter())
     app.listen(5000,(err)=>{
         if(!err) console.log('server success')
