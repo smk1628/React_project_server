@@ -4,10 +4,12 @@ const {Router, request} = require('express')
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const jwt = require('jsonwebtoken')
+const md5 = require('md5')
 //创建Router实例
 const router = new Router()
 //引入角色模型对象
 const roleModel = require('../models/roleModel')
+const userModel = require('../models/userModel')
 //定义验证token的中间件
 const verifyToken = (req,res,next)=>{
     const token = req.get("Authorization")
@@ -46,6 +48,50 @@ router.post('/role/auth',jsonParser,verifyToken,(req,res)=>{
         res.send({status:0})
     }).catch(()=>{
         res.send({status:0,msg:'授权失败' })
+    })
+})
+/* 根据角色ID获取角色权限信息 */
+router.post('/role/getAuthByID',jsonParser,verifyToken,(req,res)=>{
+    const {_id} = req.body
+    roleModel.findOne({_id}).then(data=>{
+        res.send({status:0,data})
+    }).catch(()=>{
+        res.send({status:1})
+    })
+})
+/* 获取用户列表 */
+router.get('/user/list',jsonParser,verifyToken,(req,res)=>{
+    userModel.find({admin:false}).then((data)=>{
+        res.send({status:0,data})
+    }).catch(()=>{
+        res.send({status:1,msg:'获取用户列表失败'})
+    })
+})
+/* 添加用户 */
+router.post('/user/add',jsonParser,verifyToken,(req,res)=>{
+    const {username,password,phone,email,role} = req.body
+    userModel.create({username,password:md5(password),phone,email,role}).then(()=>{
+        res.send({status:0})
+    }).catch(()=>{
+        res.send({status:1,msg:'已存在此用户'})
+    })
+})
+/* 修改用户 */
+router.post('/user/update',jsonParser,verifyToken,(req,res)=>{
+    const {_id,username,password,phone,email,role} = req.body
+    userModel.updateOne({_id},{username,password,phone,email,role}).then(()=>{
+        res.send({status:0})
+    }).catch(()=>{
+        res.send({status:1,msg:'已存在此用户'})
+    })
+})
+/* 删除用户 */
+router.post('/user/dele',jsonParser,verifyToken,(req,res)=>{
+    const {_id} = req.body
+    userModel.deleteOne({_id}).then(()=>{
+        res.send({status:0})
+    }).catch(()=>{
+        res.send({status:1,msg:'删除失败请稍后再试'})
     })
 })
 module.exports =()=>{

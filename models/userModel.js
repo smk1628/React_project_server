@@ -20,10 +20,14 @@ const usersRule = new Schema({
         type:Number, //设置类型必须为时间
         default:Date.now //设置默认值为当前时间
     },
-    role_id: String,
+    role: String,
     __v:{
         type:Number,
         default:0
+    },
+    admin:{
+        type:Boolean,
+        default:false
     }
 })
 const userModel = mongoose.model('users',usersRule)
@@ -31,7 +35,7 @@ const userModel = mongoose.model('users',usersRule)
 //初始化默认超级管理用户
 userModel.findOne({username:'admin'}).then(user=>{
     if(!user){
-        userModel.create({username:'admin',password:md5('admin')}).then(user=>{
+        userModel.create({username:'admin',password:md5('admin'),admin:true}).then(user=>{
             console.log('初始化用户: 用户名: admin 密码为: admin')
         })
     }
